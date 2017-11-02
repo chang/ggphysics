@@ -2,11 +2,11 @@ library(ggplot2)
 library(dplyr)
 
 M = 0.10  # fps multiplier
-TRAIL_DECAY = 6  # rate of decay for size of trails
+TRAIL_DECAY = 6  # rate of decay for firework trails
 SIZE_BASE = 8  # base size for projectiles
-DIRECTORY = '~/Downloads/firework/firework_{i}.png'  # directory to save images
-NEW_PROJECTILE_FRAMES = c(10, 25, 30, 40)
-SIZE_RANGE = c(0, 1)
+DIRECTORY = '~/Downloads/firework/firework_{i}.png'  # file path for images
+NEW_PROJECTILE_FRAMES = c(10, 25, 30, 40)  # frames on which to introduce new firework
+SIZE_RANGE = c(0, 1)  # ggplot2 size scale range
 COLORS = c('firebrick', 'skyblue', 'green', 'purple', 'yellow', 'blue', 'red')
 
 
@@ -16,7 +16,13 @@ random_color = function() {
 }
 
 
-#' Returns a random projectiles, defined by position, velocity, and acceleration
+#' Checks if a dataframe is valid
+is_valid_dataframe = function(obj) {
+  return (is.data.frame(obj) && nrow(obj) > 0)
+}
+
+
+#' Returns a random projectile: defined by position, velocity, and acceleration
 random_projectile = function() {
   x = runif(min = -4, max = 4, n = 1)
   v_x = rnorm(mean = 0, sd = 0.2, n = 1)
@@ -33,9 +39,9 @@ random_projectile = function() {
 }
 
 
-#' creates new trails from all projectiles
+#' Creates new trails
 new_trails = function(projectiles) {
-  if (is.data.frame(projectiles) && nrow(projectiles) > 0) {
+  if (is_valid_dataframe(projectiles)) {
     projectiles %>%
       mutate(x = x,  # + rnorm(mean = 0, sd = 0.05, n = 1),
              v_x = 0,
@@ -47,7 +53,7 @@ new_trails = function(projectiles) {
 }
 
 
-#' creates single explosion particle
+#' Creates single explosion particle
 explode_particle = function(projectile) {
   projectile %>%
     mutate(v_x = rnorm(mean = 0, sd = 0.4, n = 1),
@@ -56,7 +62,7 @@ explode_particle = function(projectile) {
 }
 
 
-#' explode a projectile
+#' Explode a projectile
 explode = function(projectile, n = 20) {
   particles = data.frame()
   for (i in 1:n) {
@@ -66,9 +72,9 @@ explode = function(projectile, n = 20) {
 }
 
 
-#' updates next frame for projectiles
+#' Creates next frame for projectiles
 update_projectiles = function(projectiles) {
-  if (is.data.frame(projectiles) && nrow(projectiles) > 0) {
+  if (is_valid_dataframe(projectiles)) {
     projectiles %>%
       mutate(x = x + v_x * M,
              v_x = v_x + a_x * M,
@@ -78,22 +84,19 @@ update_projectiles = function(projectiles) {
 }
 
 
-#' updates next frame for projectiles
+#' Creates next frame for particles
 update_particles = function(particles) {
-  if (is.data.frame(particles) && nrow(particles) > 0) {
-    particles %>%
-      mutate(x = x + v_x * M,
-             v_x = v_x + a_x * M,
-             y = y + v_y * M,
-             v_y = v_y + a_y * M,
-             size = size - 0.5)
+  if (is_valid_dataframe(particles)) {
+    update_projectiles(particles) %>% 
+      mutate(size = size - 0.5)
   }
 }
+  
 
 
-#' updates next frame for trails
+#' Creates next frame for trails
 update_trails = function(trails) {
-  if (is.data.frame(trails) && nrow(trails) > 0) {
+  if (is_valid_dataframe(trails)) {
     trails %>%
       mutate(size = size - TRAIL_DECAY * M) %>%
       filter(size > 0)
@@ -101,7 +104,7 @@ update_trails = function(trails) {
 }
 
 
-# main animation render loop
+# Main render loop
 projectiles = bind_rows(random_projectile(), random_projectile())
 trails = data.frame()
 particles = data.frame()
