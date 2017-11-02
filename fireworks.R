@@ -1,3 +1,6 @@
+#' Fireworks using ggplot2
+
+source("util.R")
 library(ggplot2)
 library(dplyr)
 
@@ -7,19 +10,6 @@ SIZE_BASE = 8  # base size for projectiles
 DIRECTORY = '~/Downloads/firework/firework_{i}.png'  # file path for images
 NEW_PROJECTILE_FRAMES = c(10, 25, 30, 40)  # frames on which to introduce new firework
 SIZE_RANGE = c(0, 1)  # ggplot2 size scale range
-COLORS = c('firebrick', 'skyblue', 'green', 'purple', 'yellow', 'blue', 'red')
-
-
-#' Returns a random color as a string
-random_color = function() {
-  sample(COLORS, 1)
-}
-
-
-#' Checks if a dataframe is valid
-is_valid_dataframe = function(obj) {
-  return (is.data.frame(obj) && nrow(obj) > 0)
-}
 
 
 #' Returns a random projectile: defined by position, velocity, and acceleration
@@ -72,18 +62,6 @@ explode = function(projectile, n = 20) {
 }
 
 
-#' Creates next frame for projectiles
-update_projectiles = function(projectiles) {
-  if (is_valid_dataframe(projectiles)) {
-    projectiles %>%
-      mutate(x = x + v_x * M,
-             v_x = v_x + a_x * M,
-             y = y + v_y * M,
-             v_y = v_y + a_y * M)
-  }
-}
-
-
 #' Creates next frame for particles
 update_particles = function(particles) {
   if (is_valid_dataframe(particles)) {
@@ -122,7 +100,7 @@ for (i in 0:150) {
 
   # write plot
   fpath = glue::glue(DIRECTORY, i=i)
-  ggsave(filename = fpath, plot = plt, width = 2, height = 2)
+  ggsave(filename = fpath, plot = plt, width = 1.5, height = 1.5)
   message(fpath)
 
   # update projectiles
