@@ -7,7 +7,7 @@ library(dplyr)
 M = 0.10  # fps multiplier
 TRAIL_DECAY = 6  # rate of decay for firework trails
 SIZE_BASE = 8  # base size for projectiles
-DIRECTORY = '~/Downloads/firework/firework_{i}.png'  # file path for images
+PATH = '~/Downloads/firework/firework_{i}.png'  # file path for images
 NEW_PROJECTILE_FRAMES = c(10, 25, 30, 40)  # frames on which to introduce new firework
 SIZE_RANGE = c(0, 1)  # ggplot2 size scale range
 
@@ -93,15 +93,10 @@ for (i in 0:150) {
       ggplot() +
         geom_point(aes(x, y, size = size, alpha = size)) +
         scale_size(range = SIZE_RANGE) +
-        xlim(-5, 5) +
-        ylim(0, 50) +
-        theme(axis.title = element_blank(),
-              legend.position = "none")
+        theme_physics()
 
   # write plot
-  fpath = glue::glue(DIRECTORY, i=i)
-  ggsave(filename = fpath, plot = plt, width = 1.5, height = 1.5)
-  message(fpath)
+  save_frame(plt, path = PATH, i = i)
 
   # update projectiles
   if (i %in% NEW_PROJECTILE_FRAMES) {

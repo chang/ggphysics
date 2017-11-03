@@ -26,3 +26,24 @@ update_projectiles = function(projectiles) {
              v_y = v_y + a_y * M)
   }
 }
+
+
+#' Theme element
+.theme_physics = list(
+    xlim(-5, 5),
+    ylim(0, 50),
+    theme(axis.title = element_blank(),
+          legend.position = "none") 
+)
+
+theme_physics = function() {
+  .theme_physics
+}
+
+
+#' Save and print message
+save_frame = function(plt, path, i) {
+  fpath = glue::glue(path, i=i)
+  ggsave(filename = fpath, plot = plt, width = 1.5, height = 1.5)
+  message(fpath)
+}
