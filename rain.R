@@ -1,11 +1,12 @@
-#' RAIN FALLING
+#' Some falling raindrops
 
 source("util.R")
 library(ggplot2)
 library(dplyr)
 
+PATH = "img/animation/rain_frame_{i}.png"
+
 M = 0.09
-PATH = "~/Downloads/rain/rain_frame_{i}.png"
 
 
 raindrop = function() {
@@ -15,7 +16,7 @@ raindrop = function() {
   y = runif(min = 50, max = 70, n = 1)
   v_y = runif(min = 0, max = 1, n = 1)
   a_y = -8
-  
+
   data.frame(x, v_x, a_x, y, v_y, a_y)
 }
 
@@ -39,9 +40,9 @@ for (i in 0:300) {
     theme_physics()
 
   save_frame(plt, path = PATH, i = i)
-  
+
   rain = rain %>%
-    update_projectiles() %>% 
-    filter(y > 0) %>% 
+    update_projectiles() %>%
+    filter(y > 0) %>%
     bind_rows(create_raindrops(round(runif(min = 5, max = 10, n = 1))))
 }
