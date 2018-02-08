@@ -17,21 +17,24 @@ library(dplyr)
 library(purrr)
 
 
-#' Returns a random color as a string
+#' Some sweet colors to pick from
+COLORS = c('firebrick', 'skyblue', 'green', 'purple', 'yellow', 'blue', 'red')
+
+
+#' Return a random color as a string
 random_color = function() {
-  COLORS = c('firebrick', 'skyblue', 'green', 'purple', 'yellow', 'blue', 'red')
   sample(COLORS, 1)
 }
 
 
-#' Checks if a dataframe is valid
+#' Check if a dataframe is valid and has a positive number of rows.
 is_valid_dataframe = function(obj) {
   return (is.data.frame(obj) && nrow(obj) > 0)
 }
 
 
-#' General update function for projectiles
-#' 
+#' General update function for projectiles.
+#'
 #' Assumes that position, velocity, and acceleration fields for x
 #' are named x, v_x, and a_x, and similarly for y. TODO: add assertion
 update_projectiles = function(projectiles) {
@@ -45,20 +48,21 @@ update_projectiles = function(projectiles) {
 }
 
 
-#' Theme element
 .theme_physics = list(
     xlim(-5, 5),
     ylim(0, 50),
     theme(axis.title = element_blank(),
-          legend.position = "none") 
+          legend.position = "none")
 )
 
+
+#' An clean ggplot2 theme template to highlight the animation.
 theme_physics = function() {
   .theme_physics
 }
 
 
-#' Grabs the directory path from a file path
+#' Extract the directory path from a file path.
 dir_path = function(path) {
   sep = file.path("", "")  # gets file path separator in an OS agnostic way
   directory = strsplit(path, sep) %>% .[[1]] %>% .[-length(.)] %>% as.list()
@@ -66,7 +70,7 @@ dir_path = function(path) {
 }
 
 
-#' Save and print message
+#' Save a frame (plot) and print progress message to stdout.
 save_frame = function(plt, path, i) {
   dir_ = dir_path(path)
   if (!dir.exists(dir_)) {

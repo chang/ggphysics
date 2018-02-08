@@ -65,11 +65,11 @@ explode = function(projectile, n = 20) {
 #' Creates next frame for particles
 update_particles = function(particles) {
   if (is_valid_dataframe(particles)) {
-    update_projectiles(particles) %>% 
+    update_projectiles(particles) %>%
       mutate(size = size - 0.5)
   }
 }
-  
+
 
 
 #' Creates next frame for trails
