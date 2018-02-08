@@ -1,15 +1,15 @@
 ## ggphysics
 
-Using ggplot2 to make physics animations, just for fun. I use [gifmake](https://github.com/ericchang00/gifmake) to stitch the individual frames together into animations. To render an animation,
+!['composite'](https://github.com/ericchang00/ggplot2-animations/raw/master/img/composite.gif)
+
+Using ggplot2 to make physics animations, just for fun. To render an animation,
 
 ```bash
 Rscript fireworks.R
 ```
 
-!['fireworks'](https://github.com/ericchang00/ggplot2-animations/raw/master/img/fireworks.gif)
-
-!['fireworks'](https://github.com/ericchang00/ggplot2-animations/raw/master/img/flubber.gif)
-
-!['fireworks'](https://github.com/ericchang00/ggplot2-animations/raw/master/img/rain.gif)
-
-!['bouncy_ball'](https://github.com/ericchang00/ggplot2-animations/raw/master/img/bouncy_ball.gif)
+Each frame is rendered as a ggplot2 plot, and written to `/img/animation`. I also wrote a simple utility to stitch the frames together: [gifmake](https://github.com/ericchang00/gifmake). You can do
+```bash
+pip install gifmake
+gifmake /img/animation
+```
